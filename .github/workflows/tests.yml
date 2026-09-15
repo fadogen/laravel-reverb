@@ -1,0 +1,38 @@
+name: Validate Reverb application
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: reverb-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        php: ['8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v6
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:2
+          coverage: none
+      - run: composer validate --strict
+      - run: cp .env.example .env
+      - run: composer install --prefer-dist --no-interaction
+      - run: composer audit --locked --no-dev
+      - run: php artisan test
+      - name: Check the Reverb command and resolved configuration
+        run: |
+          php artisan reverb:start --help
+          php artisan config:show reverb
