@@ -5,8 +5,9 @@ The Laravel application used by Fadogen's local Reverb service. It requires PHP
 compatible with the minimum supported interpreter.
 
 This repository owns the application and its committed `composer.lock`.
-Dependabot proposes dependency updates, including updates to Laravel and the
-transitive runtime packages. Changes are validated before merging.
+Dependabot proposes dependency updates, including Laravel and the transitive
+runtime packages, once a release is a week old. Major updates open individual
+pull requests. Changes are validated before merging.
 
 The packaging workflow in [fadogen/binaries](https://github.com/fadogen/binaries)
 downloads an immutable revision of this repository and runs `composer install`
